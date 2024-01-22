@@ -10,8 +10,20 @@ public class GamePanel extends JPanel implements KeyListener {
     //PREDEFINED
     JTextField textField;
     JLabel text;
-    JPanel firstGuess, secondGuess, thirdGuess, fourthGuess, fifthGuess,
-            sixthGuess, seventhGuess, eighthGuess, ninthGuess, tenthGuess;
+    JPanel firstGuess = new JPanel();
+    JPanel secondGuess = new JPanel();
+    JPanel thirdGuess = new JPanel();
+    JPanel fourthGuess = new JPanel();
+    JPanel fifthGuess = new JPanel();
+    JPanel sixthGuess = new JPanel();
+    JPanel seventhGuess = new JPanel();
+    JPanel eighthGuess = new JPanel();
+    JPanel ninthGuess = new JPanel();
+    JPanel tenthGuess = new JPanel();
+
+    JPanel[] guesses = {firstGuess, secondGuess, thirdGuess, fourthGuess, fifthGuess,
+            sixthGuess, seventhGuess, eighthGuess, ninthGuess, tenthGuess};
+
     Random random = new Random();
     String number, guess;
     int counter = 1;
@@ -33,11 +45,13 @@ public class GamePanel extends JPanel implements KeyListener {
         this.add(textField);
 
         number = newNumber();
+
+        guesses[0] = firstGuess;
+        System.out.println(guesses[0].getComponentCount());
     }
 
     @Override
     public void keyTyped(KeyEvent e) {
-
     }
 
     @Override
@@ -63,61 +77,51 @@ public class GamePanel extends JPanel implements KeyListener {
             //ADD JPANEL WITH PLAYER GUESS 1-10
             switch (counter){
                 case 1:
-                    firstGuess = new JPanel();
                     newGuess(firstGuess);
                     this.add(firstGuess);
                     this.revalidate();
                     break;
                 case 2:
-                    secondGuess = new JPanel();
                     newGuess(secondGuess);
                     this.add(secondGuess);
                     this.revalidate();
                     break;
                 case 3:
-                    thirdGuess = new JPanel();
                     newGuess(thirdGuess);
                     this.add(thirdGuess);
                     this.revalidate();
                     break;
                 case 4:
-                    fourthGuess = new JPanel();
                     newGuess(fourthGuess);
                     this.add(fourthGuess);
                     this.revalidate();
                     break;
                 case 5:
-                    fifthGuess = new JPanel();
                     newGuess(fifthGuess);
                     this.add(fifthGuess);
                     this.revalidate();
                     break;
                 case 6:
-                    sixthGuess = new JPanel();
                     newGuess(sixthGuess);
                     this.add(sixthGuess);
                     this.revalidate();
                     break;
                 case 7:
-                    seventhGuess = new JPanel();
                     newGuess(seventhGuess);
                     this.add(seventhGuess);
                     this.revalidate();
                     break;
                 case 8:
-                    eighthGuess = new JPanel();
                     newGuess(eighthGuess);
                     this.add(eighthGuess);
                     this.revalidate();
                     break;
                 case 9:
-                    ninthGuess = new JPanel();
                     newGuess(ninthGuess);
                     this.add(ninthGuess);
                     this.revalidate();
                     break;
                 case 10:
-                    tenthGuess = new JPanel();
                     newGuess(tenthGuess);
                     this.add(tenthGuess);
                     this.revalidate();
@@ -130,13 +134,16 @@ public class GamePanel extends JPanel implements KeyListener {
                 endGame("TryAgain");
             if (guess.equals(number))
                 endGame("You win!");
-
         }
+
+        if (e.getKeyCode() == 81)
+            System.exit(0);
     }
 
     @Override
     public void keyReleased(KeyEvent e) {
-
+        if (e.getKeyCode() == 82)
+            restartGame();
     }
 
     //FUNCTION TO GENERATE NEW NUMBER
@@ -188,7 +195,26 @@ public class GamePanel extends JPanel implements KeyListener {
     void endGame(String message){
         textField.setText(message);
         textField.setEditable(false);
+        text.setText("Restart game [R] / Quit game [Q]");
         //add restart game
+    }
+
+    void restartGame(){
+        //REMOVE OLD NUMBERS
+        for (int i = 0; i < counter-1; i++){
+            guesses[i].removeAll();
+            this.remove(guesses[i]);
+        }
+
+        //SET NEW STATS
+        counter = 1;
+        number = newNumber();
+        textField.setEditable(true);
+        textField.setText("");
+        text.setText("Guess the number between 1000 and 9999");
+
+        this.repaint();
+        this.revalidate();
     }
 
 }
